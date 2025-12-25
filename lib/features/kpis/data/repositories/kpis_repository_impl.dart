@@ -10,6 +10,27 @@ class KpisRepositoryImpl implements KpisRepository {
   final KpisRemoteDataSource _remote;
 
   @override
+  Future<Kpi> createKpi({
+    required String code,
+    required String title,
+    required int weight,
+    String? description,
+    bool? active,
+  }) async {
+    try {
+      return await _remote.createKpi(
+        code: code,
+        title: title,
+        weight: weight,
+        description: description,
+        active: active,
+      );
+    } on AppException catch (e) {
+      throw _mapFailure(e);
+    }
+  }
+
+  @override
   Future<List<Kpi>> getActiveKpis() async {
     try {
       return await _remote.getKpis(active: true);

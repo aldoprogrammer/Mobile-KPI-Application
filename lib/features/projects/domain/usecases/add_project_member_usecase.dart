@@ -5,7 +5,7 @@ class AddProjectMemberUseCase {
 
   final ProjectsRepository _repository;
 
-  Future<void> call(String projectId, {required String email, required String role}) {
-    return _repository.addMember(projectId, email: email, role: role);
+  Future<void> call(String projectId, {required String employeeId, String? role}) {
+    return _repository.addMember(projectId, employeeId: employeeId, role: role);
   }
 }

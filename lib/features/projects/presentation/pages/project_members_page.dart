@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/utils/validators.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/loading_view.dart';
+import '../../../employees/presentation/providers/employees_provider.dart';
 import '../../domain/entities/project.dart';
 import '../../domain/usecases/add_project_member_usecase.dart';
 import '../../domain/usecases/get_project_members_usecase.dart';
@@ -34,62 +34,84 @@ class _ProjectMembersView extends StatelessWidget {
   final Project project;
 
   Future<void> _openAddMemberDialog(BuildContext context) async {
-    final emailController = TextEditingController();
-    final roleController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+    String? selectedEmployeeId;
 
     final result = await showDialog<bool>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('Add Member'),
-          content: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  validator: Validators.email,
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: roleController,
-                  decoration: const InputDecoration(labelText: 'Role'),
-                  validator: (value) => Validators.requiredField(value, fieldName: 'Role'),
-                ),
-              ],
+        return StatefulBuilder(builder: (context, setState) {
+          final employeesProvider = context.read<EmployeesProvider>();
+          if (employeesProvider.employees.isEmpty && !employeesProvider.isLoading) {
+            employeesProvider.loadInitial();
+          }
+          return AlertDialog(
+            title: const Text('Add Member'),
+            content: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Consumer<EmployeesProvider>(
+                    builder: (context, provider, _) {
+                      if (provider.isLoading && provider.employees.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: LinearProgressIndicator(),
+                        );
+                      }
+                      return DropdownButtonFormField<String>(
+                        value: selectedEmployeeId,
+                        items: provider.employees
+                            .map(
+                              (employee) => DropdownMenuItem(
+                                value: employee.id,
+                                child: Text('${employee.name} (${employee.email})'),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) => setState(() => selectedEmployeeId = value),
+                        decoration: const InputDecoration(labelText: 'Employee'),
+                        validator: (value) =>
+                            value == null || value.isEmpty ? 'Select an employee' : null,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancel'),
-            ),
-            FilledButton(
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  Navigator.of(context).pop(true);
-                }
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    Navigator.of(context).pop(true);
+                  }
+                },
+                child: const Text('Add'),
+              ),
+            ],
+          );
+        });
       },
     );
 
     if (result == true && context.mounted) {
       final provider = context.read<ProjectMembersProvider>();
       final success = await provider.addMember(
-        email: emailController.text.trim(),
-        role: roleController.text.trim(),
+        employeeId: selectedEmployeeId ?? '',
       );
       if (!context.mounted) return;
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(provider.error ?? 'Failed to add member')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Member added')),
         );
       }
     }
@@ -130,13 +152,17 @@ class _ProjectMembersView extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               itemBuilder: (context, index) {
                 final member = provider.members[index];
+                final roleLabel = member.role?.trim();
                 return ListTile(
                   leading: CircleAvatar(
                     child: Text(member.name.characters.first.toUpperCase()),
                   ),
                   title: Text(member.name),
-                  subtitle: Text(member.email),
-                  trailing: Text(member.role),
+                  subtitle: Text(
+                    roleLabel == null || roleLabel.isEmpty
+                        ? member.email
+                        : '$roleLabel • ${member.email}',
+                  ),
                 );
               },
               separatorBuilder: (_, __) => const Divider(height: 1),

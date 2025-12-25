@@ -36,6 +36,11 @@ Update the API base URL:
 lib/core/network/api_config.dart
 ```
 
+Backend repository:
+```
+https://github.com/aldoprogrammer/forge-kpi-api
+```
+
 Default (Android emulator):
 ```
 http://10.0.2.2:3000

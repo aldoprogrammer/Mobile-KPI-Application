@@ -40,12 +40,12 @@ class ProjectMembersProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> addMember({required String email, required String role}) async {
+  Future<bool> addMember({required String employeeId, String? role}) async {
     _loading = true;
     _error = null;
     notifyListeners();
     try {
-      await _addMember(projectId, email: email, role: role);
+      await _addMember(projectId, employeeId: employeeId, role: role);
       await load();
       return true;
     } catch (e) {

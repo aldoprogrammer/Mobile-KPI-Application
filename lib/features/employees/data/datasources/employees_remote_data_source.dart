@@ -34,4 +34,36 @@ class EmployeesRemoteDataSource {
     }
     return AppException('Failed to fetch employees', code: e.response?.statusCode);
   }
+
+  Future<EmployeeModel> createEmployee({
+    required String email,
+    required String password,
+    required String role,
+    required String name,
+    String? department,
+    String? position,
+  }) async {
+    try {
+      final response = await _client.client.post(
+        '/employees',
+        data: {
+          'email': email,
+          'password': password,
+          'role': role,
+          'name': name,
+          if (department != null && department.isNotEmpty) 'department': department,
+          if (position != null && position.isNotEmpty) 'position': position,
+        },
+      );
+      final data = response.data as Map<String, dynamic>;
+      return EmployeeModel(
+        id: data['id']?.toString() ?? '',
+        name: data['name'] as String? ?? name,
+        email: email,
+        role: role,
+      );
+    } on DioException catch (e) {
+      throw _mapException(e);
+    }
+  }
 }

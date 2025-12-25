@@ -4,6 +4,7 @@ class ReportSummary extends Equatable {
   const ReportSummary({
     required this.id,
     required this.employeeId,
+    required this.employeeName,
     required this.periodStart,
     required this.periodEnd,
     required this.status,
@@ -12,11 +13,13 @@ class ReportSummary extends Equatable {
 
   final String id;
   final String employeeId;
+  final String? employeeName;
   final String periodStart;
   final String periodEnd;
   final String status;
   final int totalScore;
 
   @override
-  List<Object?> get props => [id, employeeId, periodStart, periodEnd, status, totalScore];
+  List<Object?> get props =>
+      [id, employeeId, employeeName, periodStart, periodEnd, status, totalScore];
 }

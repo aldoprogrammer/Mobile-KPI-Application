@@ -34,17 +34,43 @@ class ProjectsRemoteDataSource {
     }
   }
 
-  Future<void> addMember(String projectId, {required String email, required String role}) async {
+  Future<void> addMember(String projectId, {required String employeeId, String? role}) async {
     try {
       await _client.client.post(
         '/projects/$projectId/members',
         data: {
-          'email': email,
-          'role': role,
+          'employeeId': employeeId,
+          if (role != null && role.isNotEmpty) 'role': role,
         },
       );
     } on DioException catch (e) {
       throw _mapException(e, message: 'Failed to add project member');
+    }
+  }
+
+  Future<ProjectModel> createProject({
+    required String code,
+    required String name,
+    String? description,
+    String? status,
+    String? startDate,
+    String? endDate,
+  }) async {
+    try {
+      final response = await _client.client.post(
+        '/projects',
+        data: {
+          'code': code,
+          'name': name,
+          if (description != null && description.isNotEmpty) 'description': description,
+          if (status != null && status.isNotEmpty) 'status': status,
+          if (startDate != null && startDate.isNotEmpty) 'startDate': startDate,
+          if (endDate != null && endDate.isNotEmpty) 'endDate': endDate,
+        },
+      );
+      return ProjectModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw _mapException(e, message: 'Failed to create project');
     }
   }
 

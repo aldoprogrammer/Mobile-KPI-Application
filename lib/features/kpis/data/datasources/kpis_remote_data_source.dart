@@ -30,4 +30,28 @@ class KpisRemoteDataSource {
     }
     return AppException('Failed to fetch KPIs', code: e.response?.statusCode);
   }
+
+  Future<KpiModel> createKpi({
+    required String code,
+    required String title,
+    required int weight,
+    String? description,
+    bool? active,
+  }) async {
+    try {
+      final response = await _client.client.post(
+        '/kpis',
+        data: {
+          'code': code,
+          'title': title,
+          'weight': weight,
+          if (description != null && description.isNotEmpty) 'description': description,
+          if (active != null) 'active': active,
+        },
+      );
+      return KpiModel.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw _mapException(e);
+    }
+  }
 }

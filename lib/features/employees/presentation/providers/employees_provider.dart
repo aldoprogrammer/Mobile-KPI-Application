@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/employee.dart';
+import '../../domain/usecases/create_employee_usecase.dart';
 import '../../domain/usecases/get_employees_usecase.dart';
 
 class EmployeesProvider extends ChangeNotifier {
-  EmployeesProvider(this._getEmployeesUseCase);
+  EmployeesProvider(this._getEmployeesUseCase, this._createEmployeeUseCase);
 
   final GetEmployeesUseCase _getEmployeesUseCase;
+  final CreateEmployeeUseCase _createEmployeeUseCase;
 
   final List<Employee> _employees = [];
   bool _loading = false;
@@ -59,6 +61,36 @@ class EmployeesProvider extends ChangeNotifier {
       _loading = false;
       _loadingMore = false;
       notifyListeners();
+    }
+  }
+
+  Future<bool> createEmployee({
+    required String email,
+    required String password,
+    required String role,
+    required String name,
+    String? department,
+    String? position,
+  }) async {
+    _error = null;
+    notifyListeners();
+
+    try {
+      final employee = await _createEmployeeUseCase(
+        email: email,
+        password: password,
+        role: role,
+        name: name,
+        department: department,
+        position: position,
+      );
+      _employees.insert(0, employee);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e is Failure ? e.message : 'Failed to create employee';
+      notifyListeners();
+      return false;
     }
   }
 }

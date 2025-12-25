@@ -11,9 +11,32 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
   final ProjectsRemoteDataSource _remote;
 
   @override
-  Future<void> addMember(String projectId, {required String email, required String role}) async {
+  Future<Project> createProject({
+    required String code,
+    required String name,
+    String? description,
+    String? status,
+    String? startDate,
+    String? endDate,
+  }) async {
     try {
-      await _remote.addMember(projectId, email: email, role: role);
+      return await _remote.createProject(
+        code: code,
+        name: name,
+        description: description,
+        status: status,
+        startDate: startDate,
+        endDate: endDate,
+      );
+    } on AppException catch (e) {
+      throw _mapFailure(e);
+    }
+  }
+
+  @override
+  Future<void> addMember(String projectId, {required String employeeId, String? role}) async {
+    try {
+      await _remote.addMember(projectId, employeeId: employeeId, role: role);
     } on AppException catch (e) {
       throw _mapFailure(e);
     }

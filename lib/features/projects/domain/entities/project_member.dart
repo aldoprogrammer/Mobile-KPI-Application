@@ -11,7 +11,7 @@ class ProjectMember extends Equatable {
   final String id;
   final String name;
   final String email;
-  final String role;
+  final String? role;
 
   @override
   List<Object?> get props => [id, name, email, role];

@@ -10,6 +10,29 @@ class EmployeesRepositoryImpl implements EmployeesRepository {
   final EmployeesRemoteDataSource _remote;
 
   @override
+  Future<Employee> createEmployee({
+    required String email,
+    required String password,
+    required String role,
+    required String name,
+    String? department,
+    String? position,
+  }) async {
+    try {
+      return await _remote.createEmployee(
+        email: email,
+        password: password,
+        role: role,
+        name: name,
+        department: department,
+        position: position,
+      );
+    } on AppException catch (e) {
+      throw _mapFailure(e);
+    }
+  }
+
+  @override
   Future<List<Employee>> getEmployees({required int page, required int pageSize}) async {
     try {
       return await _remote.getEmployees(page: page, pageSize: pageSize);

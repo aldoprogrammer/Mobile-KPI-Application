@@ -60,6 +60,9 @@ class ReportsProvider extends ChangeNotifier {
         _hasMore = false;
       } else {
         _summaries.addAll(items);
+        if (items.length < _pageSize) {
+          _hasMore = false;
+        }
       }
     } catch (e) {
       _error = e is Failure ? e.message : 'Failed to load reports';
