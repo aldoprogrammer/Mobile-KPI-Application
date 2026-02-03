@@ -50,7 +50,7 @@ void main() {
 
     // assert
     expect(find.text('Email is required'), findsOneWidget);
-    expect(find.text('Password is required'), findsOneWidget);
+    expect(find.text('Password must be at least 6 characters long'), findsOneWidget);
   });
 
   testWidgets('should call login on auth provider when form is valid', (WidgetTester tester) async {

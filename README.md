@@ -74,6 +74,16 @@ You can also disable logs while staying in dev by setting:
 ApiConfig.httpLogsEnabled = false;
 ```
 
+## Testing
+
+The test suite for this project covers unit and widget tests, ensuring the application's logic and UI components behave as expected. The tests are configured to run on web, Android, and iOS platforms, providing comprehensive coverage across all supported devices.
+
+To run the tests, use the following command:
+
+```
+flutter test
+```
+
 ## Notes
 - The app expects API responses matching the current data models.
 - Reports support optional filters: employeeId, from, to.
