@@ -61,7 +61,7 @@ class _ProjectMembersView extends StatelessWidget {
                         );
                       }
                       return DropdownButtonFormField<String>(
-                        value: selectedEmployeeId,
+                        initialValue: selectedEmployeeId,
                         items: provider.employees
                             .map(
                               (employee) => DropdownMenuItem(

@@ -180,7 +180,7 @@ class _EvaluationsPageState extends State<EvaluationsPage> {
                 const LinearProgressIndicator(),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: _employeeId,
+                initialValue: _employeeId,
                 items: employeesProvider.employees
                     .map(
                       (employee) => DropdownMenuItem(
@@ -230,7 +230,7 @@ class _EvaluationsPageState extends State<EvaluationsPage> {
                         child: Column(
                           children: [
                             DropdownButtonFormField<int>(
-                              value: _scores[kpi.id],
+                              initialValue: _scores[kpi.id],
                               decoration: const InputDecoration(labelText: 'Score (1-5)'),
                               items: List.generate(
                                 5,

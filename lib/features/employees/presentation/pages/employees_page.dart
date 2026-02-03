@@ -84,7 +84,7 @@ class _EmployeesPageState extends State<EmployeesPage> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String>(
-                      value: roleValue,
+                      initialValue: roleValue,
                       decoration: const InputDecoration(labelText: 'Role'),
                       items: const [
                         DropdownMenuItem(value: 'staff', child: Text('Staff')),

@@ -55,7 +55,7 @@ class _KpisPageState extends State<KpisPage> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<int>(
-                      value: weightValue,
+                      initialValue: weightValue,
                       decoration: const InputDecoration(labelText: 'Weight'),
                       items: List.generate(
                         10,

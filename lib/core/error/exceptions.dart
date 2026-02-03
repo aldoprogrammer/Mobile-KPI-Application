@@ -9,9 +9,9 @@ class AppException implements Exception {
 }
 
 class NetworkException extends AppException {
-  NetworkException(String message, {int? code}) : super(message, code: code);
+  NetworkException(super.message, {super.code});
 }
 
 class UnauthorizedException extends AppException {
-  UnauthorizedException(String message, {int? code}) : super(message, code: code);
+  UnauthorizedException(super.message, {super.code});
 }

@@ -217,7 +217,7 @@ class _ReportsPageState extends State<ReportsPage> {
                 borderRadius: BorderRadius.circular(16),
                 gradient: LinearGradient(
                   colors: [
-                    Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.6),
+                    Theme.of(context).colorScheme.surfaceContainerHighest.withOpacity(0.6),
                     Theme.of(context).colorScheme.surface,
                   ],
                   begin: Alignment.topLeft,
