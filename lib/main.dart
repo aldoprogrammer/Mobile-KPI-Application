@@ -56,8 +56,9 @@ import 'features/approvals/domain/usecases/get_approval_usecase.dart';
 import 'features/approvals/domain/usecases/get_approvals_usecase.dart';
 import 'features/approvals/presentation/providers/approvals_provider.dart';
 
-void main() {
-  ApiConfig.useEnvironment(AppEnvironment.dev);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ApiConfig.load();
   runApp(const AppBootstrap());
 }
 
